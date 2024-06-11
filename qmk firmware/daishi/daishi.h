@@ -7,7 +7,7 @@
 
 // The first section contains all of the arguments
 // The second converts the arguments into a two-dimensional array
-#define LAYOUT_daishi( \
+#define LAYOUT( \
     K000, K001, K002, K003, K004, K005, K006, K007, K008, K009, K00A, K00B, K00C, K00D, K00E, K00F, K010, K011, \
     K100, K101, K102, K103, K104, K105, K106, K107, K108, K109, K10A, K10B, K10C, K10D, K10E, K10F, K110, K111, \
     K200, K201, K202, K203, K204, K205, K206, K207, K208, K209, K20A, K20B, K20C, K20D, K20E, K20F, K210, K211, \
