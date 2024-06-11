@@ -77,25 +77,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         switch(keycode) {
             case M_EXAMPLE1:
                 SEND_STRING("This is an example macro!"SS_TAP(X_ENTER)); //prints "This is an example macro!" and hits Enter
-                return false; 
+                return false;
             case M_EXAMPLE2:
                 SEND_STRING("This is a another example!"SS_TAP(X_ENTER)); //prints "This is a another example!" and hits Enter
-                return false; 
+                return false;
         }
     }
     return true;
 };
 
-void encoder_update(bool clockwise) {
- if (clockwise) {
-  register_code(KC_VOLU);
-  unregister_code(KC_VOLU);
- } else {
-  register_code(KC_VOLD);
-  unregister_code(KC_VOLD);
- }
+bool encoder_update(bool clockwise) {
+    if (clockwise) {
+        register_code(KC_VOLU);
+        unregister_code(KC_VOLU);
+    } else {
+        register_code(KC_VOLD);
+        unregister_code(KC_VOLD);
+    }
+    return false;
 }
-	
+
 void matrix_init_user(void) {
   // Call the keymap level matrix init.
 
