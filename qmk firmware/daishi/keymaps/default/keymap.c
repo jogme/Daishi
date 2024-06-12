@@ -1,14 +1,8 @@
 #include QMK_KEYBOARD_H
 
 enum layers {
-    _QW,
+    _QW = 0,
     _FN
-};
-
-enum custom_keycodes {
-    M_EXAMPLE1 = SAFE_RANGE,
-	M_EXAMPLE2,
-	DYNAMIC_MACRO_RANGE,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -73,16 +67,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	if (!process_dynamic_macro(keycode, record)) {
         return false;
-    }
-    if (record->event.pressed) {
-        switch(keycode) {
-            case M_EXAMPLE1:
-                SEND_STRING("This is an example macro!"SS_TAP(X_ENTER)); //prints "This is an example macro!" and hits Enter
-                return false;
-            case M_EXAMPLE2:
-                SEND_STRING("This is a another example!"SS_TAP(X_ENTER)); //prints "This is a another example!" and hits Enter
-                return false;
-        }
     }
     return true;
 };
