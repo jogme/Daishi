@@ -1,8 +1,9 @@
-#include "daishi.h"
+#include QMK_KEYBOARD_H
 
-// Layer shorthand
-#define _QW 0
-#define _FN 1
+enum layers {
+    _QW,
+    _FN
+};
 
 enum custom_keycodes {
     M_EXAMPLE1 = SAFE_RANGE,
@@ -30,8 +31,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------------------------'
  */
 
- [_QW] = LAYOUT( /* QWERTY */
-   KC_ESC , _______, _______, _______, _______, _______, _______, _______, _______, _______,DYN_MACRO_PLAY1,DYN_MACRO_PLAY2,DYN_REC_STOP, KC_PSCR, KC_SCRL, KC_PAUS, MO(_FN), KC_MUTE,
+ [_QW] = LAYOUT_ortho_7x18( /* QWERTY */
+   KC_ESC , _______, _______, _______, _______, _______, _______, _______, _______, _______,QK_DYNAMIC_MACRO_PLAY_1,QK_DYNAMIC_MACRO_PLAY_2,QK_DYNAMIC_MACRO_RECORD_STOP, KC_PSCR, KC_SCRL, KC_PAUS, MO(_FN), KC_MUTE,
    KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12 , KC_DEL , KC_HOME, KC_PGUP, KC_END , KC_INS , KC_NUM,
    KC_GRV , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_MINS, KC_EQL , KC_BSPC, KC_PGDN, KC_PSLS, KC_PAST, KC_PMNS,
    KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   , KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_LBRC, KC_RBRC, KC_BSLS, KC_P7  , KC_P8  , KC_P9  , KC_PPLS,
@@ -58,8 +59,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------------------------'
  */
 
- [_FN] = LAYOUT( /* Function */
-   QK_BOOT, KC_F13 , KC_F14 , KC_F15 , KC_F16 , KC_F17 , KC_F18 , KC_F19 , KC_F20 , KC_F21 ,DYN_REC_START1,DYN_REC_START2,DYN_REC_STOP, _______, _______, _______, MO(_FN), DB_TOGG,
+ [_FN] = LAYOUT_ortho_7x18( /* Function */
+   QK_BOOT, KC_F13 , KC_F14 , KC_F15 , KC_F16 , KC_F17 , KC_F18 , KC_F19 , KC_F20 , KC_F21 ,QK_DYNAMIC_MACRO_RECORD_START_1,QK_DYNAMIC_MACRO_RECORD_START_2,QK_DYNAMIC_MACRO_RECORD_STOP, _______, _______, _______, MO(_FN), DB_TOGG,
    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
@@ -86,7 +87,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 };
 
-bool encoder_update(bool clockwise) {
+bool encoder_update_user(uint8_t index, bool clockwise) {
     if (clockwise) {
         register_code(KC_VOLU);
         unregister_code(KC_VOLU);
@@ -106,20 +107,21 @@ void matrix_init_user(void) {
   DDRC |= (1<<6);
 }
 
-void led_set_user(uint8_t usb_led) {
-    if (usb_led & (1<<USB_LED_NUM_LOCK)) {
+bool led_update_user(led_t led_state) {
+    if (led_state.num_lock) {//usb_led & (1<<USB_LED_NUM_LOCK)) {
         PORTC |= (1<<4);
     } else {
         PORTC &= ~(1<<4);
     }
-    if (usb_led & (1<<USB_LED_CAPS_LOCK)) {
+    if (led_state.caps_lock) {//usb_led & (1<<USB_LED_CAPS_LOCK)) {
         PORTC |= (1<<5);
     } else {
         PORTC &= ~(1<<5);
     }
-    if (usb_led & (1<<USB_LED_SCROLL_LOCK)) {
+    if (led_state.scroll_lock) {//usb_led & (1<<USB_LED_SCROLL_LOCK)) {
         PORTC |= (1<<6);
     } else {
         PORTC &= ~(1<<6);
     }
+    return true;
 }
